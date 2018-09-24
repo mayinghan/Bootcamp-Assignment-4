@@ -13,7 +13,10 @@ var listingSchema = new Schema({
     required: true, 
     unique: true
   }, 
-  address: String, 
+  address: {
+    type: String,
+    default: ""
+  }, 
   coordinates: {
     latitude: Number, 
     longitude: Number

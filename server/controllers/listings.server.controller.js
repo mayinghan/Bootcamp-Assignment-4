@@ -18,7 +18,6 @@ exports.create = function(req, res) {
   /* Instantiate a Listing */
   var listing = new Listing(req.body);
 
-
   /* Then save the listing */
   listing.save(function(err) {
     if(err) {
@@ -43,20 +42,62 @@ exports.update = function(req, res) {
   /** TODO **/
   /* Replace the article's properties with the new properties found in req.body */
   /* Save the article */
+  listing.name = req.body.name;
+  listing.code = req.body.code;
+  listing.address = req.body.address;
+  if (req.body.coordinates) {
+    listing.coordinates = {
+      latitude: req.body.coordinates.latitude,
+      longitude: req.body.coordinates.longitude
+    };
+  }
+  listing.updated_at = new Date();
+
+  listing.save(err => {
+    if(err) {
+      console.log(err);
+      res.status(400).send(err);
+    } else {
+      res.json(listing);
+    }
+  });
 };
 
 /* Delete a listing */
 exports.delete = function(req, res) {
   var listing = req.listing;
-
+  console.log(listing);
   /** TODO **/
   /* Remove the article */
+  listing.remove(err => {
+    if(err) {
+      res.status(400).send(err);
+    } else {
+      res.end();
+    }
+  });
+
+
+  // Listing.findByIdAndRemove(listing._id).exec(function(err, listings) {
+  //   if(err) {
+  //     res.status(400).send(err);
+  //   } else {
+  //     res.end();
+  //   }
+  // });
 };
 
 /* Retreive all the directory listings, sorted alphabetically by listing code */
 exports.list = function(req, res) {
   /** TODO **/
   /* Your code here */
+  Listing.find().sort('code').exec(function(err, listings) {
+    if(err) {
+      res.status(400).send(err);
+    } else {
+      res.json(listings);
+    }
+  });
 };
 
 /* 
@@ -76,3 +117,9 @@ exports.listingByID = function(req, res, next, id) {
     }
   });
 };
+
+function sortList(adrsListing) {
+  adrsListing.sort((r1, r2) => {
+    return r1.name - r2.name;
+  })
+}

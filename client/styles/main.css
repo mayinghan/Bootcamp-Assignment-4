@@ -5,4 +5,7 @@
 .tableWrapper {
   max-height: 400px;
   overflow: auto;
+  margin-bottom: 20px;
+  border-style: hidden;
+  background-color: #e9ecef;
 }
